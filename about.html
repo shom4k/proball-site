@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#090b09" />
+  <title>PROбалл — О нас</title>
+  <meta name="description" content="Раздел О нас — макет в разработке." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #090b09;
+      --surface: #121612;
+      --text: #f3f6f1;
+      --muted: #9aa79a;
+      --lime: #b8ff3c;
+      --line: rgba(184, 255, 60, 0.14);
+      --line-soft: rgba(243, 246, 241, 0.08);
+      --shadow-soft: 0 12px 32px rgba(0, 0, 0, 0.35);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: "Space Grotesk", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100svh;
+      -webkit-font-smoothing: antialiased;
+      opacity: 0;
+      animation: pageIn .55s ease forwards;
+    }
+    @keyframes pageIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: none; }
+    }
+    body.is-leaving { animation: pageOut .28s ease forwards; }
+    @keyframes pageOut { to { opacity: 0; transform: translateY(-8px); } }
+    @media (prefers-reduced-motion: reduce) {
+      body { animation: none; opacity: 1; }
+      body.is-leaving { animation: none; opacity: 0; }
+    }
+    a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transparent; }
+    .wrap { width: min(1120px, calc(100% - 2.4rem)); margin-inline: auto; }
+
+    .nav {
+      position: sticky; top: 0; z-index: 50;
+      backdrop-filter: blur(18px) saturate(1.2);
+      background: rgba(9, 11, 9, 0.86);
+      border-bottom: 1px solid var(--line-soft);
+    }
+    .nav-inner {
+      min-height: 70px;
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+      gap: .55rem 1rem;
+      width: min(1120px, calc(100% - 2.4rem)); margin-inline: auto;
+      padding: .55rem 0;
+    }
+    .logo {
+      font-family: Syne, sans-serif; font-weight: 800;
+      font-size: 1.35rem; letter-spacing: -0.03em;
+    }
+    .logo span { color: var(--lime); }
+    .nav-center { flex: 1 1 auto; display: flex; justify-content: center; min-width: 0; }
+    .top-tabs {
+      display: flex; align-items: center; gap: .15rem .7rem;
+      flex-wrap: nowrap;
+    }
+    .top-tabs > a,
+    .top-tabs > button,
+    .nav-dd > button {
+      appearance: none; border: 0; cursor: pointer; font: inherit;
+      font-size: .92rem; font-weight: 500;
+      padding: .4rem .45rem;
+      color: var(--muted);
+      background: transparent;
+      white-space: nowrap;
+      transition: color .2s;
+    }
+    .top-tabs > a:hover,
+    .top-tabs > button:hover,
+    .nav-dd > button:hover,
+    .top-tabs > a.is-active { color: var(--text); }
+    .nav-dd { position: relative; }
+    .nav-dd > button {
+      display: inline-flex; align-items: center; gap: .28rem;
+    }
+    .nav-dd > button::after {
+      content: "";
+      width: .38rem; height: .38rem;
+      border-right: 1.5px solid currentColor;
+      border-bottom: 1.5px solid currentColor;
+      transform: translateY(-1px) rotate(45deg);
+      opacity: .7;
+      transition: transform .2s;
+    }
+    .nav-dd.is-open > button { color: var(--text); }
+    .nav-dd.is-open > button::after { transform: translateY(2px) rotate(225deg); }
+    .nav-dd-menu {
+      position: absolute;
+      top: calc(100% + .55rem);
+      left: 50%;
+      transform: translateX(-50%) translateY(-4px);
+      min-width: 200px;
+      padding: .45rem;
+      border-radius: 14px;
+      background: rgba(14, 17, 14, 0.96);
+      border: 1px solid var(--line-soft);
+      box-shadow: var(--shadow-soft);
+      opacity: 0; visibility: hidden; pointer-events: none;
+      transition: opacity .18s, transform .18s, visibility .18s;
+      z-index: 60;
+    }
+    .nav-dd.is-open .nav-dd-menu {
+      opacity: 1; visibility: visible; pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
+    }
+    .nav-dd-menu a {
+      display: block;
+      padding: .55rem .75rem;
+      border-radius: 10px;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+    .nav-dd-menu a:hover,
+    .nav-dd-menu a.is-current {
+      color: var(--text);
+      background: rgba(184, 255, 60, 0.08);
+    }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      border: 0; cursor: pointer; font: inherit; font-weight: 700;
+      border-radius: 999px; padding: .72rem 1.15rem;
+      transition: transform .2s, background .2s, border-color .2s;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-lime { background: var(--lime); color: #0a0c0a; }
+    .btn-ghost {
+      background: transparent; color: var(--text);
+      border: 1px solid rgba(243, 246, 241, 0.22);
+    }
+
+    .page {
+      padding: 2.2rem 0 4rem;
+      background:
+        radial-gradient(ellipse 55% 40% at 20% 0%, rgba(184, 255, 60, 0.07), transparent 50%),
+        var(--bg);
+      min-height: calc(100svh - 70px);
+    }
+    .crumb {
+      color: var(--muted);
+      font-size: .9rem;
+      margin-bottom: 1.1rem;
+    }
+    .crumb a:hover { color: var(--lime); }
+    h1 {
+      font-family: Syne, sans-serif;
+      font-weight: 800;
+      font-size: clamp(2rem, 6vw, 3.2rem);
+      letter-spacing: -0.04em;
+      margin-bottom: 1.4rem;
+    }
+    .mock {
+      min-height: min(58svh, 520px);
+      border-radius: 24px;
+      border: 1px dashed rgba(243, 246, 241, 0.14);
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.02), transparent 40%),
+        var(--surface);
+      display: grid;
+      place-items: center;
+      padding: 2rem;
+      text-align: center;
+    }
+    .mock-inner {
+      max-width: 28ch;
+      color: var(--muted);
+    }
+    .mock-inner strong {
+      display: block;
+      color: var(--text);
+      font-family: Syne, sans-serif;
+      font-size: 1.15rem;
+      margin-bottom: .45rem;
+    }
+    .footer {
+      border-top: 1px solid var(--line-soft);
+      margin-top: 2.2rem;
+      padding: 1.4rem 0 0;
+      color: var(--muted);
+      font-size: .9rem;
+      display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+    }
+
+    .site-footer {
+      margin-top: 2.5rem;
+      padding: 3rem 0 2rem;
+      border-top: 1px solid var(--line-soft);
+      background:
+        radial-gradient(ellipse 50% 60% at 10% 0%, rgba(184, 255, 60, 0.05), transparent 50%),
+        #070907;
+    }
+    .site-footer-inner {
+      width: min(1120px, calc(100% - 2.4rem));
+      margin-inline: auto;
+      display: grid;
+      gap: 2rem 1.5rem;
+      grid-template-columns: 1.1fr repeat(4, 1fr);
+      align-items: start;
+    }
+    .sf-brand .logo {
+      font-family: Syne, sans-serif;
+      font-weight: 800;
+      font-size: 1.55rem;
+      letter-spacing: -0.03em;
+      display: inline-block;
+      margin-bottom: .45rem;
+    }
+    .sf-brand .logo span { color: var(--lime); }
+    .sf-brand p {
+      color: var(--muted);
+      font-size: .9rem;
+      max-width: 18ch;
+    }
+    .sf-col h3 {
+      font-family: Syne, sans-serif;
+      font-size: .92rem;
+      font-weight: 800;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      margin-bottom: .85rem;
+    }
+    .sf-h-nav { color: #c9a0ff; }
+    .sf-h-who { color: #e8c35a; }
+    .sf-h-contacts { color: #7eb6ff; }
+    .sf-h-teachers { color: #ff7ab8; }
+    .sf-col ul {
+      list-style: none;
+      display: grid;
+      gap: .45rem;
+    }
+    .sf-col a {
+      color: rgba(243, 246, 241, 0.82);
+      font-size: .9rem;
+      transition: color .2s;
+    }
+    .sf-col a:hover { color: var(--lime); }
+    .sf-mail {
+      display: inline-block;
+      margin-bottom: .85rem;
+      font-size: .92rem;
+    }
+    .sf-actions {
+      display: flex;
+      flex-direction: column;
+      gap: .45rem;
+      align-items: flex-start;
+    }
+    .sf-actions .btn {
+      padding: .55rem 1rem;
+      font-size: .85rem;
+      min-height: 40px;
+      border: 1px solid rgba(243, 246, 241, 0.28);
+      background: transparent;
+      color: var(--text);
+      border-radius: 999px;
+      font-weight: 600;
+    }
+    .sf-actions .btn:hover {
+      border-color: var(--lime);
+      color: var(--lime);
+    }
+    .site-footer-copy {
+      width: min(1120px, calc(100% - 2.4rem));
+      margin: 2rem auto 0;
+      padding-top: 1.2rem;
+      border-top: 1px solid var(--line-soft);
+      color: var(--muted);
+      font-size: .82rem;
+    }
+
+    @media (max-width: 899px) {
+      .nav-inner {
+        width: min(1120px, calc(100% - 1.25rem));
+        min-height: 56px;
+        padding: .4rem 0;
+      }
+      .logo { font-size: 1.15rem; }
+      .btn { padding: .65rem 1rem; min-height: 42px; font-size: .9rem; }
+      .nav-center { order: 3; flex: 1 1 100%; justify-content: flex-start; }
+      .top-tabs {
+        width: 100%; overflow-x: auto; scrollbar-width: none;
+        gap: .1rem .4rem; padding-bottom: .15rem;
+      }
+      .top-tabs::-webkit-scrollbar { display: none; }
+      .nav-dd-menu { left: 0; transform: translateY(-4px); }
+      .nav-dd.is-open .nav-dd-menu { transform: translateY(0); }
+      .wrap { width: min(1120px, calc(100% - 1.25rem)); }
+      .page { padding: 1.25rem 0 3rem; }
+      .mock { min-height: 48svh; border-radius: 18px; padding: 1.4rem; }
+      .site-footer {
+        margin-top: 1.8rem;
+        padding: 2rem 0 2.2rem;
+      }
+      .site-footer-inner {
+        width: min(1120px, calc(100% - 1.25rem));
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem 1.1rem;
+      }
+      .sf-brand { grid-column: 1 / -1; }
+      .site-footer-copy {
+        width: min(1120px, calc(100% - 1.25rem));
+        font-size: .78rem;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .site-footer-inner { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="nav" id="nav">
+    <div class="nav-inner">
+      <a class="logo" href="final.html">PRO<span>балл</span></a>
+      <div class="nav-center">
+        <nav class="top-tabs" aria-label="Основное меню">
+          <div class="nav-dd" data-dd="courses">
+            <button type="button" aria-expanded="false" aria-controls="dd-courses">Курсы</button>
+            <div class="nav-dd-menu" id="dd-courses" role="menu">
+              <a href="course.html?s=rus" role="menuitem">Русский язык</a>
+              <a href="course.html?s=math" role="menuitem">Математика</a>
+              <a href="course.html?s=inf" role="menuitem">Информатика</a>
+              <a href="course.html?s=phys" role="menuitem">Физика</a>
+            </div>
+          </div>
+          <a href="oge.html">ОГЭ</a>
+          <div class="nav-dd" data-dd="about">
+            <button type="button" aria-expanded="false" aria-controls="dd-about">О нас</button>
+            <div class="nav-dd-menu" id="dd-about" role="menu">
+              <a href="about.html?p=teachers" data-p="teachers" role="menuitem">Преподаватели</a>
+              <a href="about.html?p=reviews" data-p="reviews" role="menuitem">Отзывы</a>
+              <a href="about.html?p=blog" data-p="blog" role="menuitem">Блог</a>
+              <a href="about.html?p=book" data-p="book" role="menuitem">Учебник</a>
+              <a href="about.html?p=contacts" data-p="contacts" role="menuitem">Контакты</a>
+            </div>
+          </div>
+        </nav>
+      </div>
+      <a class="btn btn-lime" href="final.html#start">Бесплатно</a>
+    </div>
+  </header>
+
+  <main class="page">
+    <div class="wrap">
+      <p class="crumb"><a href="final.html">Главная</a> · <span>О нас</span> · <span id="crumb-section">Раздел</span></p>
+      <h1 id="title">О нас</h1>
+      <div class="mock" aria-label="Пустой макет">
+        <div class="mock-inner">
+          <strong id="mock-title">Пустой макет</strong>
+          <p>Здесь позже будет контент раздела. Пока страница-заглушка.</p>
+        </div>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+      <div class="site-footer-inner">
+        <div class="sf-brand">
+          <a class="logo" href="final.html">PRO<span>балл</span></a>
+          <p>Онлайн-школа ОГЭ с прогрессом, который видно родителям.</p>
+        </div>
+        <div class="sf-col">
+          <h3 class="sf-h-nav">Навигация</h3>
+          <ul>
+            <li><a href="final.html">Главная</a></li>
+            <li><a href="oge.html">Курсы ОГЭ</a></li>
+            <li><a href="final.html#programs">Тарифы</a></li>
+            <li><a href="about.html?p=teachers">Преподаватели</a></li>
+            <li><a href="about.html?p=reviews">Отзывы</a></li>
+            <li><a href="about.html?p=blog">Блог</a></li>
+            <li><a href="about.html?p=book">Учебник</a></li>
+            <li><a href="about.html?p=contacts">Контакты</a></li>
+          </ul>
+        </div>
+        <div class="sf-col">
+          <h3 class="sf-h-who">Кто мы?</h3>
+          <ul>
+            <li><a href="about.html?p=contacts">О компании</a></li>
+            <li><a href="about.html?p=contacts">Публичная оферта</a></li>
+            <li><a href="about.html?p=contacts">Политика конфиденциальности</a></li>
+            <li><a href="about.html?p=contacts">Образовательная лицензия</a></li>
+          </ul>
+        </div>
+        <div class="sf-col">
+          <h3 class="sf-h-contacts">Контакты</h3>
+          <a class="sf-mail" href="mailto:hello@proball.ru">hello@proball.ru</a>
+          <div class="sf-actions">
+            <a class="btn" href="final.html#start">Перезвоните мне</a>
+            <a class="btn" href="about.html?p=reviews">Оставить отзыв</a>
+          </div>
+        </div>
+        <div class="sf-col">
+          <h3 class="sf-h-teachers">Преподаватели</h3>
+          <ul>
+            <li><a href="course.html?s=rus">Русский язык</a></li>
+            <li><a href="course.html?s=math">Математика</a></li>
+            <li><a href="course.html?s=inf">Информатика</a></li>
+            <li><a href="course.html?s=phys">Физика</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="site-footer-copy">© 2026 PROбалл · онлайн-школа ОГЭ</div>
+    </footer>
+  </main>
+
+  <script>
+    const PAGES = {
+      teachers: 'Преподаватели',
+      reviews: 'Отзывы',
+      blog: 'Блог',
+      book: 'Учебник',
+      contacts: 'Контакты'
+    };
+    const key = new URLSearchParams(location.search).get('p') || 'teachers';
+    const title = PAGES[key] || 'О нас';
+    document.title = `PROбалл — ${title}`;
+    document.getElementById('title').textContent = title;
+    document.getElementById('crumb-section').textContent = title;
+    document.getElementById('mock-title').textContent = title;
+    document.querySelectorAll('#dd-about [data-p]').forEach((a) => {
+      a.classList.toggle('is-current', a.dataset.p === key);
+    });
+
+    const dropdowns = document.querySelectorAll('.nav-dd');
+    function closeDropdowns(except) {
+      dropdowns.forEach((dd) => {
+        if (dd === except) return;
+        dd.classList.remove('is-open');
+        const btn = dd.querySelector(':scope > button');
+        if (btn) btn.setAttribute('aria-expanded', 'false');
+      });
+    }
+    dropdowns.forEach((dd) => {
+      const btn = dd.querySelector(':scope > button');
+      if (!btn) return;
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const open = !dd.classList.contains('is-open');
+        closeDropdowns(dd);
+        dd.classList.toggle('is-open', open);
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+      dd.querySelectorAll('a').forEach((link) => {
+        link.addEventListener('click', () => closeDropdowns());
+      });
+    });
+    document.addEventListener('click', () => closeDropdowns());
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeDropdowns();
+    });
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.querySelectorAll('a[href]').forEach((link) => {
+      const href = link.getAttribute('href');
+      if (!href || href.startsWith('#') || href.startsWith('http') || href.startsWith('mailto:')) return;
+      if (link.target === '_blank') return;
+      link.addEventListener('click', (e) => {
+        if (reduceMotion || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        e.preventDefault();
+        document.body.classList.add('is-leaving');
+        window.setTimeout(() => { location.href = href; }, 260);
+      });
+    });
+  </script>
+</body>
+</html>
