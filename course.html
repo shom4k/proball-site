@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#090b09" />
+  <title>PROбалл — Курс ОГЭ</title>
+  <meta name="description" content="Годовой курс ОГЭ в мини-группе с еженедельным отчётом родителю." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #090b09;
+      --surface: #121612;
+      --text: #f3f6f1;
+      --muted: #9aa79a;
+      --lime: #b8ff3c;
+      --line: rgba(184, 255, 60, 0.14);
+      --line-soft: rgba(243, 246, 241, 0.08);
+      --shadow-soft: 0 12px 32px rgba(0, 0, 0, 0.35);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: "Space Grotesk", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100svh;
+      -webkit-font-smoothing: antialiased;
+      opacity: 0;
+      animation: pageIn .55s ease forwards;
+    }
+    @keyframes pageIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: none; }
+    }
+    body.is-leaving {
+      animation: pageOut .28s ease forwards;
+    }
+    @keyframes pageOut {
+      to { opacity: 0; transform: translateY(-8px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      body { animation: none; opacity: 1; }
+      body.is-leaving { animation: none; opacity: 0; }
+    }
+    a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transparent; }
+    .wrap { width: min(1120px, calc(100% - 2.4rem)); margin-inline: auto; }
+
+    .nav {
+      position: sticky; top: 0; z-index: 50;
+      backdrop-filter: blur(18px) saturate(1.2);
+      background: rgba(9, 11, 9, 0.86);
+      border-bottom: 1px solid var(--line-soft);
+    }
+    .nav-inner {
+      min-height: 70px;
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+      gap: .55rem 1rem;
+      width: min(1120px, calc(100% - 2.4rem)); margin-inline: auto;
+      padding: .55rem 0;
+    }
+    .logo {
+      font-family: Syne, sans-serif; font-weight: 800;
+      font-size: 1.35rem; letter-spacing: -0.03em;
+    }
+    .logo span { color: var(--lime); }
+    .nav-center { flex: 1 1 auto; display: flex; justify-content: center; min-width: 0; }
+    .top-tabs {
+      display: flex; align-items: center; gap: .15rem .7rem;
+      flex-wrap: nowrap;
+    }
+    .top-tabs > a,
+    .top-tabs > button,
+    .nav-dd > button {
+      appearance: none; border: 0; cursor: pointer; font: inherit;
+      font-size: .92rem; font-weight: 500;
+      padding: .4rem .45rem;
+      color: var(--muted);
+      background: transparent;
+      white-space: nowrap;
+      transition: color .2s;
+    }
+    .top-tabs > a:hover,
+    .top-tabs > button:hover,
+    .nav-dd > button:hover,
+    .top-tabs > a.is-active { color: var(--text); }
+    .nav-dd { position: relative; }
+    .nav-dd > button {
+      display: inline-flex; align-items: center; gap: .28rem;
+    }
+    .nav-dd > button::after {
+      content: "";
+      width: .38rem; height: .38rem;
+      border-right: 1.5px solid currentColor;
+      border-bottom: 1.5px solid currentColor;
+      transform: translateY(-1px) rotate(45deg);
+      opacity: .7;
+      transition: transform .2s;
+    }
+    .nav-dd.is-open > button { color: var(--text); }
+    .nav-dd.is-open > button::after { transform: translateY(2px) rotate(225deg); }
+    .nav-dd-menu {
+      position: absolute;
+      top: calc(100% + .55rem);
+      left: 50%;
+      transform: translateX(-50%) translateY(-4px);
+      min-width: 200px;
+      padding: .45rem;
+      border-radius: 14px;
+      background: rgba(14, 17, 14, 0.96);
+      border: 1px solid var(--line-soft);
+      box-shadow: var(--shadow-soft);
+      opacity: 0; visibility: hidden; pointer-events: none;
+      transition: opacity .18s, transform .18s, visibility .18s;
+      z-index: 60;
+    }
+    .nav-dd.is-open .nav-dd-menu {
+      opacity: 1; visibility: visible; pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
+    }
+    .nav-dd-menu a {
+      display: block;
+      padding: .55rem .75rem;
+      border-radius: 10px;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+    .nav-dd-menu a:hover,
+    .nav-dd-menu a.is-current {
+      color: var(--text);
+      background: rgba(184, 255, 60, 0.08);
+    }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      border: 0; cursor: pointer; font: inherit; font-weight: 700;
+      border-radius: 999px; padding: .78rem 1.2rem;
+      transition: transform .2s, background .2s, border-color .2s;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-lime { background: var(--lime); color: #0a0c0a; }
+    .btn-ghost {
+      background: transparent; color: var(--text);
+      border: 1px solid rgba(243, 246, 241, 0.22);
+    }
+    .btn-ghost:hover { border-color: var(--lime); color: var(--lime); }
+
+    .page {
+      padding: 2.2rem 0 4rem;
+      background:
+        radial-gradient(ellipse 55% 40% at 20% 0%, rgba(184, 255, 60, 0.08), transparent 50%),
+        radial-gradient(ellipse 45% 35% at 90% 5%, rgba(100, 140, 255, 0.08), transparent 45%),
+        var(--bg);
+    }
+    .crumb {
+      color: var(--muted);
+      font-size: .9rem;
+      margin-bottom: 1.2rem;
+    }
+    .crumb a:hover { color: var(--lime); }
+    .course-hero {
+      display: grid;
+      gap: 1.5rem;
+      align-items: start;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 860px) {
+      .course-hero {
+        grid-template-columns: 300px minmax(0, 1fr);
+        gap: 2.25rem;
+      }
+    }
+    .face {
+      width: 100%;
+      max-width: 300px;
+      aspect-ratio: 1;
+      display: grid; place-items: center;
+      border-radius: 24px;
+      font-size: clamp(4.5rem, 14vw, 7rem);
+      line-height: 1;
+      border: 1px solid var(--line-soft);
+      overflow: hidden;
+      min-width: 0;
+      justify-self: start;
+      animation: faceIn .65s cubic-bezier(.2,.8,.2,1) both;
+    }
+    @keyframes faceIn {
+      from { opacity: 0; transform: scale(0.92) translateY(12px); }
+      to { opacity: 1; transform: none; }
+    }
+    .face.tone-orange { background: linear-gradient(160deg, #ff8a3d, #ff5c2a 55%, #c93a18); }
+    .face.tone-pink { background: linear-gradient(160deg, #ff6bb5, #e23a9a 55%, #9b1f6d); }
+    .face.tone-blue { background: linear-gradient(160deg, #6a8cff, #4566f0 55%, #2a3fb8); }
+    .face.tone-violet { background: linear-gradient(160deg, #b48cff, #7c4dff 55%, #4a2bb5); }
+    .info {
+      display: flex; flex-direction: column; gap: .85rem;
+      padding: 0.2rem 0;
+      min-width: 0;
+      animation: infoIn .6s .08s cubic-bezier(.2,.8,.2,1) both;
+    }
+    @keyframes infoIn {
+      from { opacity: 0; transform: translateX(14px); }
+      to { opacity: 1; transform: none; }
+    }
+    .eyebrow {
+      color: var(--lime);
+      font-size: .8rem; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase;
+    }
+    h1 {
+      font-family: Syne, sans-serif;
+      font-weight: 800;
+      font-size: clamp(1.55rem, 4.2vw, 2.35rem);
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      text-transform: uppercase;
+      max-width: 18ch;
+    }
+    .tags { display: flex; flex-wrap: wrap; gap: .4rem; }
+    .tags span {
+      font-size: .78rem; font-weight: 600;
+      padding: .3rem .65rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--line-soft);
+      color: var(--muted);
+    }
+    .lead {
+      color: var(--muted);
+      max-width: 48ch;
+      font-size: 1.02rem;
+    }
+    .meta {
+      list-style: none;
+      display: grid; gap: .4rem;
+      color: var(--muted);
+      font-size: .95rem;
+      margin: .2rem 0;
+    }
+    .meta li {
+      display: flex; align-items: center; gap: .5rem;
+    }
+    .meta li::before {
+      content: attr(data-icon);
+      width: 1.2rem; text-align: center;
+    }
+    .price {
+      font-family: Syne, sans-serif;
+      font-weight: 800;
+      font-size: clamp(1.6rem, 4vw, 2rem);
+      letter-spacing: -0.02em;
+    }
+    .price small {
+      display: block;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: .9rem; font-weight: 500;
+      color: var(--muted);
+      margin-top: .2rem;
+    }
+    .actions {
+      display: flex; flex-wrap: wrap; gap: .65rem;
+      margin-top: .35rem;
+    }
+    .panel {
+      margin-top: 2rem;
+      padding: 1.35rem 1.25rem;
+      border-radius: 20px;
+      background: var(--surface);
+      border: 1px solid var(--line-soft);
+    }
+    .panel h2 {
+      font-family: Syne, sans-serif;
+      font-size: 1.2rem;
+      margin-bottom: .55rem;
+    }
+    .panel p { color: var(--muted); max-width: 60ch; }
+    .footer {
+      border-top: 1px solid var(--line-soft);
+      margin-top: 2.5rem;
+      padding: 1.4rem 0 2rem;
+      color: var(--muted);
+      font-size: .9rem;
+      display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+    }
+
+    .site-footer {
+      margin-top: 2.5rem;
+      padding: 3rem 0 2rem;
+      border-top: 1px solid var(--line-soft);
+      background:
+        radial-gradient(ellipse 50% 60% at 10% 0%, rgba(184, 255, 60, 0.05), transparent 50%),
+        #070907;
+    }
+    .site-footer-inner {
+      width: min(1120px, calc(100% - 2.4rem));
+      margin-inline: auto;
+      display: grid;
+      gap: 2rem 1.5rem;
+      grid-template-columns: 1.1fr repeat(4, 1fr);
+      align-items: start;
+    }
+    .sf-brand .logo {
+      font-family: Syne, sans-serif;
+      font-weight: 800;
+      font-size: 1.55rem;
+      letter-spacing: -0.03em;
+      display: inline-block;
+      margin-bottom: .45rem;
+    }
+    .sf-brand .logo span { color: var(--lime); }
+    .sf-brand p {
+      color: var(--muted);
+      font-size: .9rem;
+      max-width: 18ch;
+    }
+    .sf-col h3 {
+      font-family: Syne, sans-serif;
+      font-size: .92rem;
+      font-weight: 800;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      margin-bottom: .85rem;
+    }
+    .sf-h-nav { color: #c9a0ff; }
+    .sf-h-who { color: #e8c35a; }
+    .sf-h-contacts { color: #7eb6ff; }
+    .sf-h-teachers { color: #ff7ab8; }
+    .sf-col ul {
+      list-style: none;
+      display: grid;
+      gap: .45rem;
+    }
+    .sf-col a {
+      color: rgba(243, 246, 241, 0.82);
+      font-size: .9rem;
+      transition: color .2s;
+    }
+    .sf-col a:hover { color: var(--lime); }
+    .sf-mail {
+      display: inline-block;
+      margin-bottom: .85rem;
+      font-size: .92rem;
+    }
+    .sf-actions {
+      display: flex;
+      flex-direction: column;
+      gap: .45rem;
+      align-items: flex-start;
+    }
+    .sf-actions .btn {
+      padding: .55rem 1rem;
+      font-size: .85rem;
+      min-height: 40px;
+      border: 1px solid rgba(243, 246, 241, 0.28);
+      background: transparent;
+      color: var(--text);
+      border-radius: 999px;
+      font-weight: 600;
+    }
+    .sf-actions .btn:hover {
+      border-color: var(--lime);
+      color: var(--lime);
+    }
+    .site-footer-copy {
+      width: min(1120px, calc(100% - 2.4rem));
+      margin: 2rem auto 0;
+      padding-top: 1.2rem;
+      border-top: 1px solid var(--line-soft);
+      color: var(--muted);
+      font-size: .82rem;
+    }
+
+    @media (max-width: 899px) {
+      .nav-inner {
+        width: min(1120px, calc(100% - 1.25rem));
+        min-height: 56px;
+        padding: .4rem 0;
+        gap: .35rem;
+      }
+      .logo { font-size: 1.15rem; }
+      .btn { padding: .7rem 1.05rem; min-height: 44px; font-size: .92rem; }
+      .nav-center { order: 3; flex: 1 1 100%; justify-content: flex-start; }
+      .top-tabs {
+        width: 100%; overflow-x: auto; scrollbar-width: none;
+        gap: .1rem .4rem; padding-bottom: .15rem;
+      }
+      .top-tabs::-webkit-scrollbar { display: none; }
+      .top-tabs > a,
+      .top-tabs > button,
+      .nav-dd > button {
+        font-size: .84rem;
+        padding: .55rem .4rem;
+        min-height: 40px;
+      }
+      .nav-dd-menu {
+        left: 0; transform: translateY(-4px); min-width: 180px;
+      }
+      .nav-dd.is-open .nav-dd-menu { transform: translateY(0); }
+      .wrap { width: min(1120px, calc(100% - 1.25rem)); }
+      .page { padding: 1.2rem 0 3rem; }
+      .crumb { font-size: .84rem; margin-bottom: 1rem; }
+      .face {
+        max-width: none;
+        width: min(100%, 320px);
+        margin-inline: auto;
+        font-size: clamp(4.8rem, 28vw, 7rem);
+      }
+      .info { gap: .7rem; }
+      h1 {
+        font-size: clamp(1.35rem, 7.2vw, 1.85rem);
+        max-width: none;
+      }
+      .lead { font-size: .95rem; }
+      .actions {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: .55rem;
+      }
+      .actions .btn { width: 100%; }
+      .panel { margin-top: 1.5rem; padding: 1.15rem 1rem; }
+      .panel h2 { font-size: 1.08rem; }
+      .site-footer {
+        margin-top: 1.8rem;
+        padding: 2rem 0 2.2rem;
+      }
+      .site-footer-inner {
+        width: min(1120px, calc(100% - 1.25rem));
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem 1.1rem;
+      }
+      .sf-brand { grid-column: 1 / -1; }
+      .site-footer-copy {
+        width: min(1120px, calc(100% - 1.25rem));
+        font-size: .78rem;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .face, .info { animation: none; }
+      }
+    }
+
+    @media (max-width: 520px) {
+      .site-footer-inner { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="nav" id="nav">
+    <div class="nav-inner">
+      <a class="logo" href="final.html">PRO<span>балл</span></a>
+      <div class="nav-center">
+        <nav class="top-tabs" aria-label="Основное меню">
+          <div class="nav-dd" data-dd="courses">
+            <button type="button" aria-expanded="false" aria-controls="dd-courses">Курсы</button>
+            <div class="nav-dd-menu" id="dd-courses" role="menu">
+              <a href="course.html?s=rus" data-s="rus" role="menuitem">Русский язык</a>
+              <a href="course.html?s=math" data-s="math" role="menuitem">Математика</a>
+              <a href="course.html?s=inf" data-s="inf" role="menuitem">Информатика</a>
+              <a href="course.html?s=phys" data-s="phys" role="menuitem">Физика</a>
+            </div>
+          </div>
+          <a href="oge.html">ОГЭ</a>
+          <div class="nav-dd" data-dd="about">
+            <button type="button" aria-expanded="false" aria-controls="dd-about">О нас</button>
+            <div class="nav-dd-menu" id="dd-about" role="menu">
+              <a href="about.html?p=teachers" data-p="teachers" role="menuitem">Преподаватели</a>
+              <a href="about.html?p=reviews" data-p="reviews" role="menuitem">Отзывы</a>
+              <a href="about.html?p=blog" data-p="blog" role="menuitem">Блог</a>
+              <a href="about.html?p=book" data-p="book" role="menuitem">Учебник</a>
+              <a href="about.html?p=contacts" data-p="contacts" role="menuitem">Контакты</a>
+            </div>
+          </div>
+        </nav>
+      </div>
+      <a class="btn btn-lime" href="final.html#start">Бесплатно</a>
+    </div>
+  </header>
+
+  <main class="page">
+    <div class="wrap">
+      <p class="crumb"><a href="oge.html">Курсы ОГЭ</a> · <span id="crumb-subject">Курс</span></p>
+
+      <section class="course-hero">
+        <div class="face tone-orange" id="face" aria-hidden="true">🧮</div>
+        <div class="info">
+          <div class="eyebrow">Годовой курс ОГЭ</div>
+          <h1 id="title">Курс</h1>
+          <div class="tags" id="tags"></div>
+          <p class="lead" id="lead"></p>
+          <ul class="meta" id="meta"></ul>
+          <div class="price" id="price"></div>
+          <div class="actions">
+            <a class="btn btn-lime" href="final.html#start">Купить курс</a>
+            <a class="btn btn-ghost" href="oge.html">Все курсы</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Как идёт подготовка</h2>
+        <p id="about">Мини-группа 6–8 человек, эфиры 2 раза в неделю, домашки в Telegram и еженедельный отчёт родителю.</p>
+      </section>
+    </div>
+
+    <footer class="site-footer">
+      <div class="site-footer-inner">
+        <div class="sf-brand">
+          <a class="logo" href="final.html">PRO<span>балл</span></a>
+          <p>Онлайн-школа ОГЭ с прогрессом, который видно родителям.</p>
+        </div>
+        <div class="sf-col">
+          <h3 class="sf-h-nav">Навигация</h3>
+          <ul>
+            <li><a href="final.html">Главная</a></li>
+            <li><a href="oge.html">Курсы ОГЭ</a></li>
+            <li><a href="final.html#programs">Тарифы</a></li>
+            <li><a href="about.html?p=teachers">Преподаватели</a></li>
+            <li><a href="about.html?p=reviews">Отзывы</a></li>
+            <li><a href="about.html?p=blog">Блог</a></li>
+            <li><a href="about.html?p=book">Учебник</a></li>
+            <li><a href="about.html?p=contacts">Контакты</a></li>
+          </ul>
+        </div>
+        <div class="sf-col">
+          <h3 class="sf-h-who">Кто мы?</h3>
+          <ul>
+            <li><a href="about.html?p=contacts">О компании</a></li>
+            <li><a href="about.html?p=contacts">Публичная оферта</a></li>
+            <li><a href="about.html?p=contacts">Политика конфиденциальности</a></li>
+            <li><a href="about.html?p=contacts">Образовательная лицензия</a></li>
+          </ul>
+        </div>
+        <div class="sf-col">
+          <h3 class="sf-h-contacts">Контакты</h3>
+          <a class="sf-mail" href="mailto:hello@proball.ru">hello@proball.ru</a>
+          <div class="sf-actions">
+            <a class="btn" href="final.html#start">Перезвоните мне</a>
+            <a class="btn" href="about.html?p=reviews">Оставить отзыв</a>
+          </div>
+        </div>
+        <div class="sf-col">
+          <h3 class="sf-h-teachers">Преподаватели</h3>
+          <ul>
+            <li><a href="course.html?s=rus">Русский язык</a></li>
+            <li><a href="course.html?s=math">Математика</a></li>
+            <li><a href="course.html?s=inf">Информатика</a></li>
+            <li><a href="course.html?s=phys">Физика</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="site-footer-copy">© 2026 PROбалл · онлайн-школа ОГЭ</div>
+    </footer>
+  </main>
+
+  <script>
+    const COURSES = {
+      rus: {
+        subject: 'Русский язык',
+        emoji: '✍️',
+        tone: 'tone-pink',
+        teacher: 'Машей Русичкой',
+        start: '14 сентября',
+        freq: '2 раза в неделю',
+        lead: 'Разбор сочинения, орфографии и заданий ОГЭ без воды — с проверкой и понятными шаблонами.',
+        about: 'Русский язык ОГЭ: база → типовые задания → пробники. Мини-группа 6–8, эфиры 2 раза в неделю и отчёт родителю каждую неделю.'
+      },
+      math: {
+        subject: 'Математика',
+        emoji: '🧮',
+        tone: 'tone-orange',
+        teacher: 'Алиной Математичкой',
+        start: '15 сентября',
+        freq: '2 раза в неделю',
+        lead: 'От базы до уверенной «4–5»: теория коротко, много практики и разбор ошибок на пробниках.',
+        about: 'Математика ОГЭ: закрываем пробелы, тренируем части 1 и 2, пишем пробники как на экзамене. Мини-группа и еженедельный отчёт.'
+      },
+      inf: {
+        subject: 'Информатика',
+        emoji: '💻',
+        tone: 'tone-blue',
+        teacher: 'Сашей Информатиком',
+        start: '15 сентября',
+        freq: '2 раза в неделю',
+        lead: 'Алгоритмы, логика и типовые задания ОГЭ — с практикой на компьютере и разбором решений.',
+        about: 'Информатика ОГЭ: от простых тем к экзаменационным. Эфиры, домашки и пробники в формате экзамена.'
+      },
+      phys: {
+        subject: 'Физика',
+        emoji: '⚡',
+        tone: 'tone-violet',
+        teacher: 'Кириллом Физиком',
+        start: '16 сентября',
+        freq: '2 раза в неделю',
+        lead: 'Формулы без зубрёжки: понимание → задачи → экзаменационный формат.',
+        about: 'Физика ОГЭ: механика, тепловые и электромагнитные явления. Мини-группа, практика и отчёт родителю.'
+      }
+    };
+
+    const key = new URLSearchParams(location.search).get('s') || 'math';
+    const course = COURSES[key] || COURSES.math;
+
+    document.title = `PROбалл — ОГЭ · ${course.subject}`;
+    document.getElementById('crumb-subject').textContent = course.subject;
+    document.getElementById('title').textContent = `ОГЭ 2027 / годовой курс с ${course.teacher}`;
+    document.getElementById('lead').textContent = course.lead;
+    document.getElementById('about').textContent = course.about;
+
+    const face = document.getElementById('face');
+    face.className = `face ${course.tone}`;
+    face.textContent = course.emoji;
+
+    document.getElementById('tags').innerHTML = `
+      <span>ОГЭ</span><span>9 класс</span><span>${course.subject}</span>
+    `;
+    document.getElementById('meta').innerHTML = `
+      <li data-icon="🏁">${course.start}</li>
+      <li data-icon="👥">${course.freq}</li>
+      <li data-icon="📅">9 месяцев</li>
+      <li data-icon="💻">Эфиры и практика</li>
+    `;
+    document.getElementById('price').innerHTML = `от 2 790 ₽/мес<small>год · 24 990 ₽</small>`;
+
+    document.querySelectorAll('#dd-courses [data-s]').forEach((a) => {
+      a.classList.toggle('is-current', a.dataset.s === key);
+    });
+
+    const dropdowns = document.querySelectorAll('.nav-dd');
+    function closeDropdowns(except) {
+      dropdowns.forEach((dd) => {
+        if (dd === except) return;
+        dd.classList.remove('is-open');
+        const btn = dd.querySelector(':scope > button');
+        if (btn) btn.setAttribute('aria-expanded', 'false');
+      });
+    }
+    dropdowns.forEach((dd) => {
+      const btn = dd.querySelector(':scope > button');
+      if (!btn) return;
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const open = !dd.classList.contains('is-open');
+        closeDropdowns(dd);
+        dd.classList.toggle('is-open', open);
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+      dd.querySelectorAll('a').forEach((link) => {
+        link.addEventListener('click', () => closeDropdowns());
+      });
+    });
+    document.addEventListener('click', () => closeDropdowns());
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeDropdowns();
+    });
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.querySelectorAll('a[href]').forEach((link) => {
+      const href = link.getAttribute('href');
+      if (!href || href.startsWith('#') || href.startsWith('http') || href.startsWith('mailto:')) return;
+      if (link.target === '_blank') return;
+      link.addEventListener('click', (e) => {
+        if (reduceMotion || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        e.preventDefault();
+        document.body.classList.add('is-leaving');
+        window.setTimeout(() => { location.href = href; }, 260);
+      });
+    });
+  </script>
+</body>
+</html>
